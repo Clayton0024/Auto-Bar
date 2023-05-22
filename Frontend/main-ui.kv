@@ -1,0 +1,46 @@
+#:import MDFloatLayout kivymd.uix.floatlayout.MDFloatLayout
+#:import MDBoxLayout kivymd.uix.boxlayout.MDBoxLayout
+#:import MDTextField kivymd.uix.textfield.MDTextField
+#:import MDCard kivymd.uix.card.MDCard
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import ScrollView kivy.uix.scrollview.ScrollView
+
+BoxLayout:
+    orientation: 'vertical'  # Change to vertical orientation
+    size_hint: 1, 1
+    size: "1280dp", "720dp"
+
+    BoxLayout:
+        size_hint: 1, None
+        height: "48dp"
+
+        MDTopAppBar:
+            title: "Auto Bar"
+            left_action_items: [["menu", lambda x: app.callback()]]
+            right_action_items: [["magnify", lambda x: app.search_callback()]]
+            elevation: 6
+
+    ScrollView:
+        GridLayout:
+            cols: 3
+            padding: "16dp"
+            spacing: "16dp"
+            size_hint_y: None
+            height: self.minimum_height
+
+            MDCard:
+                orientation: "vertical"
+                size_hint: None, None
+                size: "200dp", "200dp"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # Add this line
+
+                BoxLayout:
+                    orientation: "vertical"
+
+                    MDLabel:
+                        text: "Tile 1"
+                        theme_text_color: "Primary"
+                        font_size: "20sp"
+                        halign: "center"
+                        valign: "middle"
+# ... Continue for other tiles
