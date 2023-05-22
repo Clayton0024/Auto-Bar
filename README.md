@@ -21,7 +21,7 @@ Welcome to AutoBar, an Automatic Bartender Machine powered by a Raspberry Pi and
 
 1.  Setup your Raspberry Pi with the Raspad. Instructions for this can be found on the [Raspad documentation site](https://www.raspad.com/).
 
-2.  Install the required Python dependencies. It is recommended to use a virtual environment.
+2.  Install the required Python dependencies. It is recommended to use a virtual environment (may need to set an alias for your specific python version).
 
         py3.7 -m venv venv
 
