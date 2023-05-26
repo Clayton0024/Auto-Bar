@@ -10,25 +10,25 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            cd litespace/backend
             pip install -r requirements.txt
             pip install -r requirements-dev.txt
 
       - run:
           name: Run black
           command: |
-            cd litespace/backend
-            black .
+            black --config=pyproject.toml .
 
       - run:
           name: Run flake8
           command: |
-            cd litespace/backend
-            flake8
+            flake8 --config=setup.cfg
 
       - run:
           name: Run isort
           command: |
-            cd litespace/backend
-            isort .
+            isort --profile=black .
 
+      - run:
+          name: Run pytype
+          command: |
+            pytype .
