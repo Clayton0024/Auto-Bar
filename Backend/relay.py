@@ -1,65 +1,47 @@
-import serial
 import time
-
-#TODO convert to use pymodbus!!
+from pymodbus.client.sync import ModbusSerialClient
+from pymodbus.constants import Endian
+from pymodbus.payload import BinaryPayloadBuilder
 
 def control_relays(relay_data):
-    # Open the serial port
-    ser = serial.Serial('COM7', 9600, timeout=1)
+    # Connect to the Modbus RTU slave
+    client = ModbusSerialClient(method='rtu', port='COM7', baudrate=9600, timeout=1)
+
+    if not client.connect():
+        print("Failed to connect to the Modbus RTU slave")
+        return
 
     for relay in relay_data:
         # Define the payload bytes for turning on the relay
         slave_id = 1  # Board number
-        function = 6  # Control function
         relay_number = relay['relay_number']
         action_on = 1  # Action: 1 = Close (turn on the switch)
 
         # Construct the payload to turn on the relay
-        payload_on = bytearray([slave_id, function, relay_number >> 8, relay_number & 0xFF, action_on, 0, 0, 0])
+        builder = BinaryPayloadBuilder(byteorder=Endian.Big)
+        builder.add_8bit_uint(action_on)
 
         # Send the payload to turn on the relay
-        ser.write(payload_on)
-        time.sleep(0.1)  # Wait for the relay board to process the command
+        client.write_coil(relay_number, value=bool(builder.to_registers()[0]), unit=slave_id)
 
-    # Close the serial port temporarily
-    ser.close()
+        time.sleep(0.1)  # Wait for the relay board to process the command
 
     # Wait for the specified durations for each relay
     for relay in relay_data:
-        # Open the serial port again
-        ser = serial.Serial('COM7', 9600, timeout=1)
-
         # Define the payload bytes for turning off the relay
         relay_number = relay['relay_number']
         duration = relay['duration']
-
-        # Calculate the CRC values for turning off the relay
-        crc = bytearray([slave_id, function, relay_number >> 8, relay_number & 0xFF, 2, duration])
-        crc16 = 0xFFFF
-
-        for byte in crc:
-            crc16 ^= byte
-            for _ in range(8):
-                if crc16 & 0x0001:
-                    crc16 >>= 1
-                    crc16 ^= 0xA001
-                else:
-                    crc16 >>= 1
-
-        crc_lsb = crc16 & 0xFF
-        crc_msb = (crc16 >> 8) & 0xFF
-
-        payload_off = bytearray([slave_id, function, relay_number >> 8, relay_number & 0xFF, 2, duration, crc_lsb, crc_msb])
 
         # Wait for the specified duration
         time.sleep(duration)
 
         # Send the payload to turn off the relay
-        ser.write(payload_off)
+        client.write_coil(relay_number, value=False, unit=slave_id)
+
         time.sleep(0.5)  # Increase the delay to allow the relay board to process the command
 
-        # Close the serial port
-        ser.close()
+    # Close the connection to the Modbus RTU slave
+    client.close()
 
 
 # Example usage
