@@ -23,11 +23,11 @@ Welcome to AutoBar, an Automatic Bartender Machine powered by a Raspberry Pi and
 
 2.  Install the required Python dependencies. It is recommended to use a virtual environment (may need to set an alias for your specific python version).
 
-        py3.7 -m venv venv
+        python3 -m venv venv
 
-3.  Activate the venv (windows)
+3.  Activate the venv
 
-        ./venv/Scripts/activate
+        source venv/bin/activate
 
 4.  Install requirements
     ```
