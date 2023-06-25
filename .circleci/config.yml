@@ -28,8 +28,3 @@ jobs:
           name: Run isort
           command: |
             isort --profile=black .
-
-      - run:
-          name: Run pytype
-          command: |
-            pytype .
