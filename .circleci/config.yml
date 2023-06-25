@@ -17,7 +17,16 @@ jobs:
       - run:
           name: Install system dependencies
           command: |
-            apt-get install -y libgl1-mesa-glx
+            apt-get install -y libgl1-mesa-glx xvfb
+
+      - run:
+          name: Configure virtual display
+          command: Xvfb :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &
+          background: true
+
+      - run:
+          name: Set display environment variable
+          command: export DISPLAY=:99
 
       - checkout
       - run:
