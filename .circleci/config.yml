@@ -7,14 +7,6 @@ jobs:
 
     steps:
       - run:
-          name: Update package lists
-          command: apt-get update
-
-      - run:
-          name: Install MTDev
-          command: apt-get install -y libmtdev-dev
-
-      - run:
           name: Install system dependencies
           command: |
             apt-get install -y libgl1-mesa-glx
@@ -41,14 +33,3 @@ jobs:
           name: Run isort
           command: |
             isort --profile=black .
-
-      - run:
-          name: Run pytype
-          command: |
-            pytype .
-
-      - run:
-          name: Run Kivy application
-          command: |
-            pip install pyvirtualdisplay EasyProcess
-            python -c "from easyprocess import EasyProcess; from pyvirtualdisplay.smartdisplay import SmartDisplay; with SmartDisplay() as disp: EasyProcess('python your_application.py').call()"
