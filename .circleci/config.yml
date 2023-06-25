@@ -7,6 +7,10 @@ jobs:
 
     steps:
       - run:
+          name: Update package lists
+          command: apt-get update
+
+      - run:
           name: Install MTDev
           command: apt-get install -y libmtdev-dev
 
