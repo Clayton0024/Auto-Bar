@@ -14,6 +14,11 @@ jobs:
           name: Install MTDev
           command: apt-get install -y libmtdev-dev
 
+      - run:
+          name: Install system dependencies
+          command: |
+            apt-get install -y libgl1-mesa-glx
+
       - checkout
       - run:
           name: Install dependencies
