@@ -13,7 +13,7 @@ Welcome to AutoBar, an Automatic Bartender Machine powered by a Raspberry Pi and
 ## Software Requirements
 
 - Raspbian OS (or any compatible OS)
-- Python 3.7 or higher
+- Python 3.10 or higher
 - KivyMD
 - Pymodbus
 
