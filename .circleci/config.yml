@@ -6,11 +6,6 @@ jobs:
       - image: python:3.10.11
 
     steps:
-      - run:
-          name: Install system dependencies
-          command: |
-            apt-get install -y libgl1-mesa-glx
-
       - checkout
       - run:
           name: Install dependencies
