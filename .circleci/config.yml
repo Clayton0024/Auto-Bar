@@ -17,16 +17,7 @@ jobs:
       - run:
           name: Install system dependencies
           command: |
-            apt-get install -y libgl1-mesa-glx xvfb
-
-      - run:
-          name: Configure virtual display
-          command: Xvfb :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &
-          background: true
-
-      - run:
-          name: Set display environment variable
-          command: export DISPLAY=:99
+            apt-get install -y libgl1-mesa-glx
 
       - checkout
       - run:
@@ -55,3 +46,9 @@ jobs:
           name: Run pytype
           command: |
             pytype .
+
+      - run:
+          name: Run Kivy application
+          command: |
+            pip install pyvirtualdisplay EasyProcess
+            python -c "from easyprocess import EasyProcess; from pyvirtualdisplay.smartdisplay import SmartDisplay; with SmartDisplay() as disp: EasyProcess('python your_application.py').call()"
