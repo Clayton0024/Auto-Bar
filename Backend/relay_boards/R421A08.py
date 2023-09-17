@@ -36,7 +36,7 @@ import relay_modbus
 
 
 # Fixed board type string
-BOARD_TYPE = 'R421A08'
+BOARD_TYPE = "R421A08"
 
 # Fixed RS485 baudrate required for the R421A08 relay board
 BAUDRATE = 9600
@@ -69,14 +69,17 @@ class ModbusException(Exception):
 
 
 class R421A08(object):
-    """ R421A08 relay board class """
-    def __init__(self,
-                 modbus_obj,
-                 address=1,
-                 board_name='Relay board {}'.format(BOARD_TYPE),
-                 num_address=NUM_ADDRESSES,
-                 num_relays=NUM_RELAYS,
-                 verbose=False):
+    """R421A08 relay board class"""
+
+    def __init__(
+        self,
+        modbus_obj,
+        address=1,
+        board_name="Relay board {}".format(BOARD_TYPE),
+        num_address=NUM_ADDRESSES,
+        num_relays=NUM_RELAYS,
+        verbose=False,
+    ):
         """
             R421A08 relay board constructor
         :param modbus_obj:
@@ -168,15 +171,16 @@ class R421A08(object):
         assert delay >= 0 and delay <= 255
 
         if not self._modbus.is_open():
-            raise ModbusException('Error: Serial port not open')
+            raise ModbusException("Error: Serial port not open")
 
         # Create binary control command
         tx_data = [
-            self._address,              # Slave address of the relay board 0..63
-            FUNCTION_CONTROL_COMMAND,   # Read status is always 0x03
-            0x00, relay,                # Relay 0x0001..0x0008
-            cmd,                        # Command 0x01..0x06
-            delay                       # Delay 0x00..0xFF
+            self._address,  # Slave address of the relay board 0..63
+            FUNCTION_CONTROL_COMMAND,  # Read status is always 0x03
+            0x00,
+            relay,  # Relay 0x0001..0x0008
+            cmd,  # Command 0x01..0x06
+            delay,  # Delay 0x00..0xFF
         ]
 
         # Send command
@@ -204,14 +208,16 @@ class R421A08(object):
         assert type(relay) == int
 
         if not self._modbus.is_open():
-            raise ModbusException('Error: Serial port not open')
+            raise ModbusException("Error: Serial port not open")
 
         # Create binary read status
         tx_data = [
-            self._address,          # Slave address of the relay board 0..63
-            FUNCTION_READ_STATUS,   # Read status is always 0x03
-            0x00, relay,            # Relay 0x0001..0x0008
-            0x00, 0x01              # Number of bytes is always 0x0001
+            self._address,  # Slave address of the relay board 0..63
+            FUNCTION_READ_STATUS,  # Read status is always 0x03
+            0x00,
+            relay,  # Relay 0x0001..0x0008
+            0x00,
+            0x01,  # Number of bytes is always 0x0001
         ]
 
         # Send command and wait for response with timeout
@@ -225,17 +231,17 @@ class R421A08(object):
             data_no_crc = rx_data[:-2]
             crc = rx_data[-2:]
             if self._modbus.crc(data_no_crc) != crc:
-                raise ModbusException('RX error: Incorrect CRC received')
+                raise ModbusException("RX error: Incorrect CRC received")
             elif rx_data[0] != tx_data[0]:
-                raise ModbusException('RX error: Incorrect address received')
+                raise ModbusException("RX error: Incorrect address received")
             elif rx_data[1] != tx_data[1]:
-                raise ModbusException('RX error: Incorrect function received')
+                raise ModbusException("RX error: Incorrect function received")
             elif rx_data[2] != 2:
-                raise ModbusException('RX error: Incorrect data length received')
+                raise ModbusException("RX error: Incorrect data length received")
             elif rx_data[3] != 0:
-                raise ModbusException('RX error: Incorrect data high Byte received')
+                raise ModbusException("RX error: Incorrect data high Byte received")
             elif rx_data[4] != 0 and rx_data[4] != 1:
-                raise ModbusException('RX error: Incorrect data low Byte received')
+                raise ModbusException("RX error: Incorrect data low Byte received")
             else:
                 return rx_data[4]
 
@@ -248,19 +254,19 @@ class R421A08(object):
         return self._read_relay_status(relay)
 
     def print_status(self, relay, indent=False):
-        line = ''
+        line = ""
         if indent:
-            line += '  '
+            line += "  "
 
-        line += 'Relay {}: '.format(relay)
+        line += "Relay {}: ".format(relay)
 
         status = self.get_status(relay)
         if status == 0:
-            line += 'OFF'
+            line += "OFF"
         elif status == 1:
-            line += 'ON'
+            line += "ON"
         else:
-            line += 'UNKNOWN'
+            line += "UNKNOWN"
             return False
 
         print(line)
@@ -275,15 +281,15 @@ class R421A08(object):
                 status_old = status_new
 
                 if status_new == 0:
-                    print('Relay {}: OFF'.format(relay))
+                    print("Relay {}: OFF".format(relay))
                 elif status_new == 1:
-                    print('Relay {}: ON'.format(relay))
+                    print("Relay {}: ON".format(relay))
                 else:
-                    print('Relay {}: UNKNOWN'.format(relay))
+                    print("Relay {}: UNKNOWN".format(relay))
 
             time.sleep(interval)
             if self._verbose:
-                print('.')
+                print(".")
 
     def on(self, relay):
         return self._send_relay_command(relay, CMD_ON)
