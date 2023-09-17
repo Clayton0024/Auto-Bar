@@ -24,7 +24,7 @@ class CocktailDBAPI:
         return data
 
     def get_cocktails_by_list_of_ingredients(self, ingredients: str):
-        # ingredients should be a comma seperated string of ingredents" Example: Gin,Vodka,Dry_Vermouth
+       
         endpoint = f"{self.base_url}/filter.php?i={ingredients}"
         response = requests.get(endpoint)
         data = response.json()
