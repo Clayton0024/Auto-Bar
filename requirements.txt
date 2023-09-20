@@ -12,6 +12,7 @@ gevent-websocket==0.10.1
 greenlet==2.0.2
 idna==3.4
 iso8601==2.0.0
+isort==5.12.0
 mccabe==0.7.0
 mypy-extensions==1.0.0
 packaging==23.1
