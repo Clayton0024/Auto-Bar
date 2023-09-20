@@ -34,7 +34,6 @@ import time
 
 import relay_modbus
 
-
 # Fixed board type string
 BOARD_TYPE = "R421A08"
 

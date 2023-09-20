@@ -1,6 +1,5 @@
-from .modbus import Modbus, get_frame_str
-from .modbus import FRAME_DELAY
-from .modbus import SerialOpenException, TransferException
+from .modbus import (FRAME_DELAY, Modbus, SerialOpenException,
+                     TransferException, get_frame_str)
 from .serial_ports import get_serial_ports
 
 __version__ = "1.0.1"
