@@ -11,4 +11,4 @@ def say_hello_py(x):
 
 eel.say_hello_js("Python World!")  # Call a Javascript function
 
-eel.start('index.html', mode = "chrome")
+eel.start("index.html", mode="chrome")
