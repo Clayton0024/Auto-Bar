@@ -18,7 +18,7 @@ class PumpInterface(ABC):
     """
 
     @abstractmethod
-    def get_status(self, pump_number: int = None) -> List[RelayStatus]:
+    def get_status(self, pump_number: int = None) -> RelayStatus:
         """Get status of relay(s).  If no pump number is specified, return status of all pumps."""
         pass
 
@@ -42,12 +42,16 @@ class PumpR421A08(PumpInterface):
         self._relay_board = relay_boards.R421A08(modbus_obj)
         self._num_pumps = relay_boards.R421A08.num_relays
 
-    def get_status(self, pump_number: int = None) -> List[RelayStatus]:
+    def _get_board_status(self) -> RelayStatus:
+        """Check if relay board is on."""
+        return RelayStatus.ON
+
+    def get_status(self, pump_number: int = None) -> RelayStatus:
         """Get status of relay(s). If no pump number is specified, return status of all pumps."""
         if pump_number is None:
-            return [self._get_pump_status(p) for p in range(1, self._num_pumps + 1)]
+            return self._get_board_status()
         else:
-            return [self._get_pump_status(pump_number)]
+            return self._get_pump_status(pump_number)
 
     def _get_pump_status(self, pump_number: int) -> RelayStatus:
         """Get status of a single pump."""
