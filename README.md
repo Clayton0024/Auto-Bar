@@ -47,19 +47,19 @@ Welcome to AutoBar, an Automatic Bartender Machine powered by a Raspberry Pi and
 
 2. Install the required Python dependencies. It is recommended to use a virtual environment (may need to set an alias for your specific python version).
 
-  
+```  
 
 python3 -m venv venv
 
-  
+``` 
 
 3. Activate the venv
 
-  
+```  
 
 source venv/bin/activate
 
-  
+```  
 
 4. Install requirements
 
@@ -77,11 +77,11 @@ pip install -r requirements.txt
 
 Run the application with the following command:
 
-  
+```  
 
-python main.py
+python3 main.py
 
-  
+```  
 
 The UI will appear on the Raspad's screen. Use the search bar to look for your desired cocktail, select it, and AutoBar will take care of the rest!
 
