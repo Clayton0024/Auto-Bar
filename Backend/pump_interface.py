@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import List
 
-from libraries.relay_boards.R421A08 import R421A08
-from libraries.relay_modbus import Modbus
+import libraries.relay_boards as relay_boards
+import libraries.relay_modbus as relay_modbus
 
 
 class RelayStatus(Enum):
@@ -13,36 +14,44 @@ class RelayStatus(Enum):
 
 class PumpInterface(ABC):
     """
-    Defines the interface for a single pump.
+    Defines the interface for a set of pumps.
     """
 
     @abstractmethod
-    def get_status(self) -> RelayStatus:
-        """Get status of relay."""
+    def get_status(self, pump_number: int = None) -> List[RelayStatus]:
+        """Get status of relay(s).  If no pump number is specified, return status of all pumps."""
         pass
 
     @abstractmethod
-    def turn_on(self):
+    def turn_on(self, pump_number: int):
         """Turn on relay."""
         pass
 
     @abstractmethod
-    def turn_off(self):
-        """Turn off relay."""
+    def turn_off(self, pump_number: int):
+        """Turn off relay for `pump_number`"""
         pass
 
 
 class PumpR421A08(PumpInterface):
     """
-    Defines the interface for a single pump.
+    Defines the interface for a set of pumps using a single R421A08 relay board.
     """
 
-    def __init__(self, modbus_obj: Modbus):
-        self._relay_board = R421A08(modbus_obj)
+    def __init__(self, modbus_obj: relay_modbus.modbus.Modbus):
+        self._relay_board = relay_boards.R421A08(modbus_obj)
+        self._num_pumps = relay_boards.R421A08.num_relays
 
-    def get_status(self) -> RelayStatus:
-        """Get status of relay."""
-        status = self._relay_board.get_status()
+    def get_status(self, pump_number: int = None) -> List[RelayStatus]:
+        """Get status of relay(s). If no pump number is specified, return status of all pumps."""
+        if pump_number is None:
+            return [self._get_pump_status(p) for p in range(1, self._num_pumps + 1)]
+        else:
+            return [self._get_pump_status(pump_number)]
+
+    def _get_pump_status(self, pump_number: int) -> RelayStatus:
+        """Get status of a single pump."""
+        status = self._relay_board.get_status(pump_number)
         if status == -1:
             return RelayStatus.FAULT
         elif status == 0:
@@ -50,10 +59,10 @@ class PumpR421A08(PumpInterface):
         elif status == 1:
             return RelayStatus.ON
 
-    def turn_on(self):
-        """Turn on relay."""
-        self._relay_board.on()
+    def turn_on(self, pump_number: int):
+        """Turn on relay for the specified pump."""
+        self._relay_board.on(pump_number)
 
-    def turn_off(self):
-        """Turn off relay."""
-        self._relay_board.off()
+    def turn_off(self, pump_number: int):
+        """Turn off relay for the specified pump."""
+        self._relay_board.off(pump_number)
