@@ -18,7 +18,7 @@ class PumpInterface(ABC):
 
     @abstractmethod
     def get_status(self, pump_number: int = None) -> RelayStatus:
-        """Get status of relay(s).  If no pump number is specified, return status of all pumps."""
+        """Get status of relay.  If no pump number is specified, return status of the relay board."""
         pass
 
     @abstractmethod
