@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List
 
 import libraries.relay_boards as relay_boards
 import libraries.relay_modbus as relay_modbus
