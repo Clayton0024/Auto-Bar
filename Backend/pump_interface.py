@@ -46,7 +46,6 @@ class PumpR421A08(PumpInterface):
         return RelayStatus.ON
 
     def get_status(self, pump_number: int = None) -> RelayStatus:
-        """Get status of relay(s). If no pump number is specified, return status of all pumps."""
         if pump_number is None:
             return self._get_board_status()
         else:
@@ -63,9 +62,7 @@ class PumpR421A08(PumpInterface):
             return RelayStatus.ON
 
     def turn_on(self, pump_number: int):
-        """Turn on relay for the specified pump."""
         self._relay_board.on(pump_number)
 
     def turn_off(self, pump_number: int):
-        """Turn off relay for the specified pump."""
         self._relay_board.off(pump_number)
