@@ -90,7 +90,7 @@ class AutobarInterface(ABC):
 class MessageError(Exception):
     pass
 
-class Message:
+class IncomingMessage:
     def __init__(self, message: dict):
         self._message = message
         self._type = self._determine_type()
@@ -100,7 +100,7 @@ class Message:
         if 'type' in self._message:
             return self._message['type']
         else:
-            raise ValueError("Message dictionary must contain a 'type' key")
+            raise MessageError("Message dictionary must contain a 'type' key")
 
     @property
     def type(self):
@@ -174,7 +174,7 @@ class Autobar(AutobarInterface):
         })
 
     def _on_message_received(self, message: dict):
-        msg = Message(message)
+        msg = IncomingMessage(message)
         print("Received message: ")
         print(msg.content)
         if msg.type == 'set_ingredients':
