@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Dict, List
 from hardware_interface import HardwareInterface
 from communication_interface import TcpCommunicator
 
@@ -113,9 +113,7 @@ class IncomingMessage:
 
 class Autobar(AutobarInterface):
     def __init__(self, hardware: HardwareInterface=None):
-        self._available_ingredients = []  # TODO: Load from file if available
-        communicator = TcpCommunicator("127.0.0.1", 6969, self._on_message_received)
-        communicator.start()
+        self._available_ingredients: Dict[int, Ingredient] = {}  # TODO: Load from file if available
 
     def _set_available_drinks(self) -> None:
         # TODO: filter local database for drinks that can be made with available ingredients
@@ -151,7 +149,7 @@ class Autobar(AutobarInterface):
                 install_time_s=ingredient['install_time_s']
             ))
 
-        self.set_ingredients(ingredient_list)
+        self._set_ingredients(ingredient_list)
 
     def _handle_place_order_message(self, message: dict):
         if 'drink_id' not in message:
@@ -182,7 +180,7 @@ class Autobar(AutobarInterface):
             'status': self.get_status()
         })
 
-    def _on_message_received(self, message: dict):
+    def on_message_received(self, message: dict):
         msg = IncomingMessage(message)
         print("Received message: ")
         print(msg.content)
@@ -196,9 +194,12 @@ class Autobar(AutobarInterface):
 
     def get_available_ingredients(self) -> List[Ingredient]:
         return self._available_ingredients
-
+    
     def set_ingredients(self, ingredients: List[Ingredient]):
-        pass
+        self._set_ingredients(ingredients)
+
+    def _set_ingredients(self, ingredients: List[Ingredient]):
+        self._available_ingredients.update({ingredient.relay_no: ingredient for ingredient in ingredients})
 
     def place_order(self, order: Order) -> bool:
         
