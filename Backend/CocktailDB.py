@@ -1,5 +1,6 @@
 import requests
-
+import string
+import json
 
 class CocktailDBAPI:
     def __init__(self, api_key: int):
@@ -7,6 +8,12 @@ class CocktailDBAPI:
 
     def search_cocktails_by_name(self, search_term: str):
         endpoint = f"{self.base_url}/search.php?s={search_term}"
+        response = requests.get(endpoint)
+        data = response.json()
+        return data
+    
+    def search_cocktails_by_first_letter(self, first_letter: str):
+        endpoint = f"{self.base_url}/search.php?f={first_letter}"
         response = requests.get(endpoint)
         data = response.json()
         return data
@@ -28,3 +35,19 @@ class CocktailDBAPI:
         response = requests.get(endpoint)
         data = response.json()
         return data
+
+def update_local_db():
+    drinks = []
+    alphabet = string.ascii_lowercase  # Get all lowercase letters
+    api = CocktailDBAPI("1")
+    for letter in alphabet:
+        print(f"Getting drinks starting with {letter}")
+        data = api.search_cocktails_by_first_letter(letter)
+        if data['drinks'] is not None:
+            for drink in data['drinks']:
+                drinks.append(drink)
+
+    json.dump(drinks, open("../drinks.json", "w"))
+
+if __name__ == "__main__":
+    update_local_db()
