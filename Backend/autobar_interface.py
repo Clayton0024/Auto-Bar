@@ -134,11 +134,20 @@ class Autobar(AutobarInterface):
                 raise(MessageError('Ingredient must have an alcohol percentage'))
             if 'install_time_s' not in ingredient:
                 raise(MessageError('Ingredient must have an install time'))
+            
+            relay_no = int(ingredient['relay_no'])
+            if relay_no < 1 or relay_no > 16:
+                raise(MessageError('Relay number must be between 1 and 16'))
+            
+            abv_pct = float(ingredient['abv_pct'])
+            if abv_pct < 0 or abv_pct > 100:
+                raise(MessageError('Alcohol percentage must be between 0 and 100'))
+
             ingredient_list.append(Ingredient(
                 name=ingredient['name'],
                 quantity_ml=ingredient['quantity_ml'],
-                relay_no=ingredient['relay_no'],
-                abv_pct=ingredient['abv_pct'],
+                relay_no=relay_no,
+                abv_pct=abv_pct,
                 install_time_s=ingredient['install_time_s']
             ))
 
