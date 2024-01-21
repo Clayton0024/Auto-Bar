@@ -1,6 +1,7 @@
 import requests
 import string
 import json
+import os
 
 class CocktailDBAPI:
     def __init__(self, api_key: int):
@@ -48,6 +49,22 @@ def update_local_db():
                 drinks.append(drink)
 
     json.dump(drinks, open("../drinks.json", "w"))
+
+def get_all_possible_ingredients():
+    if not os.path.exists("../drinks.json"):
+        update_local_db()
+
+    drinks = json.load(open("../drinks.json", "r"))
+
+    ingredients = set()
+
+    for drink in drinks:
+        for i in range(1, 16):
+            ingredient = drink[f"strIngredient{i}"]
+            if ingredient is not None and ingredient != "":
+                ingredients.add(ingredient.lower())
+
+    return ingredients
 
 if __name__ == "__main__":
     update_local_db()
