@@ -31,6 +31,11 @@
 #
 
 import time
+import sys
+from pathlib import Path
+
+# Append the parent directory of the current script to the Python path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import relay_modbus
 
