@@ -80,7 +80,8 @@ class TcpCommunicator(CommunicationInterface):
                 print(f"Connection from {client_address}")
                 self._handle_connection(connection)
                 return True
-        except:
+        except Exception as e:
+            print(f"Error in _start_server: {e}")
             return False
 
     def start(self):
