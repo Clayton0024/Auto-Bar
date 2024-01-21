@@ -86,11 +86,33 @@ class AutobarInterface(ABC):
         """Get the status or information about the hardware system."""
         pass
 
+
 class MessageError(Exception):
     pass
 
+class Message:
+    def __init__(self, message: dict):
+        self._message = message
+        self._type = self._determine_type()
+
+    def _determine_type(self):
+        # Determine the type of the message based on its content
+        if 'type' in self._message:
+            return self._message['type']
+        else:
+            raise ValueError("Message dictionary must contain a 'type' key")
+
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def content(self):
+        return self._message
+
+
 class Autobar(AutobarInterface):
-    def __init__(self, hardware: HardwareInterface):
+    def __init__(self, hardware: HardwareInterface=None):
         self._available_ingredients = []  # TODO: Load from file if available
         communicator = TcpCommunicator("127.0.0.1", 6969, self._on_message_received)
         communicator.start()
@@ -152,11 +174,13 @@ class Autobar(AutobarInterface):
         })
 
     def _on_message_received(self, message: dict):
-        print("Received message: " + message)
-        if message['type'] == 'set_ingredients':
-            self._handle_set_ingredients_message(message)
-        elif message['type'] == 'place_order':
-            self._handle_place_order_message(message)
+        msg = Message(message)
+        print("Received message: ")
+        print(msg.content)
+        if msg.type == 'set_ingredients':
+            self._handle_set_ingredients_message(msg.content)
+        elif msg.type == 'place_order':
+            self._handle_place_order_message(msg.content)
 
     def get_available_drinks(self) -> List[Drink]:
         return self._available_drinks
