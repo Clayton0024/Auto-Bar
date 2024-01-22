@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List
 from hardware_interface import HardwareInterface
+import json
+import os
 
 
 class Ingredient(dict):
@@ -111,8 +113,41 @@ class IncomingMessage:
 
 
 class Autobar(AutobarInterface):
-    def __init__(self, hardware: HardwareInterface=None):
-        self._available_ingredients: Dict[int, Ingredient] = {}  # TODO: Load from file if available
+    def __init__(self, ingredients_filepath='ingredients.json', hardware: HardwareInterface=None):
+        self._available_ingredients: Dict[int, Ingredient] = {}
+
+        self._ingredients_filepath = ingredients_filepath
+        
+        # load ingredients from file
+        if os.path.exists(self._ingredients_filepath):
+            print("File exists already, using it.")
+            self._load_ingredients_from_file()
+        else:
+            print("File does not exist, whatever.")
+
+    def _save_ingredients_to_file(self):
+        with open(self._ingredients_filepath, 'w') as f:
+            json.dump(self._available_ingredients, f)
+
+    def _load_ingredients_from_file(self):
+        print("opening filepath")
+        with open(self._ingredients_filepath, 'r') as f:
+            # print the whole file
+            print("reading:")
+            print(f.read())
+            f.seek(0)
+            json_dict = json.load(f)
+            print(json_dict)
+            for key, val in json_dict.items():
+                self._available_ingredients.update(
+                    {int(key): Ingredient(
+                        name=val['name'],
+                        quantity_ml=val['quantity_ml'],
+                        relay_no=val['relay_no'],
+                        abv_pct=val['abv_pct'],
+                        install_time_s=val['install_time_s']
+                    )})
+            
 
     def _set_available_drinks(self) -> None:
         # TODO: filter local database for drinks that can be made with available ingredients
@@ -198,6 +233,9 @@ class Autobar(AutobarInterface):
     def _set_ingredients(self, ingredients: List[Ingredient]):
         for ingredient in ingredients:
             self._available_ingredients.update({ingredient['relay_no']: ingredient})
+
+        self._save_ingredients_to_file()
+        
 
     def place_order(self, order: Order) -> bool:
         pass
