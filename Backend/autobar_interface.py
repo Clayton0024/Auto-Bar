@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List
 from hardware_interface import HardwareInterface
-from communication_interface import TcpCommunicator
 
 
 class Ingredient(dict):
