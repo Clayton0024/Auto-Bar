@@ -120,24 +120,15 @@ class Autobar(AutobarInterface):
         
         # load ingredients from file
         if os.path.exists(self._ingredients_filepath):
-            print("File exists already, using it.")
             self._load_ingredients_from_file()
-        else:
-            print("File does not exist, whatever.")
 
     def _save_ingredients_to_file(self):
         with open(self._ingredients_filepath, 'w') as f:
             json.dump(self._available_ingredients, f)
 
     def _load_ingredients_from_file(self):
-        print("opening filepath")
         with open(self._ingredients_filepath, 'r') as f:
-            # print the whole file
-            print("reading:")
-            print(f.read())
-            f.seek(0)
             json_dict = json.load(f)
-            print(json_dict)
             for key, val in json_dict.items():
                 self._available_ingredients.update(
                     {int(key): Ingredient(
