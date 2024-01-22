@@ -182,8 +182,6 @@ class Autobar(AutobarInterface):
 
     def on_message_received(self, message: dict):
         msg = IncomingMessage(message)
-        print("Received message: ")
-        print(msg.content)
         if msg.type == 'set_ingredients':
             self._handle_set_ingredients_message(msg.content)
         elif msg.type == 'place_order':
@@ -192,17 +190,17 @@ class Autobar(AutobarInterface):
     def get_available_drinks(self) -> List[Drink]:
         return self._available_drinks
 
-    def get_available_ingredients(self) -> List[Ingredient]:
+    def get_available_ingredients(self) -> Dict[int, Ingredient]:
         return self._available_ingredients
     
     def set_ingredients(self, ingredients: List[Ingredient]):
         self._set_ingredients(ingredients)
 
     def _set_ingredients(self, ingredients: List[Ingredient]):
-        self._available_ingredients.update({ingredient.relay_no: ingredient for ingredient in ingredients})
+        for ingredient in ingredients:
+            self._available_ingredients.update({ingredient['relay_no']: ingredient})
 
     def place_order(self, order: Order) -> bool:
-        
         pass
 
     def get_status(self) -> str:
