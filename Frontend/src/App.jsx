@@ -2,6 +2,7 @@ import { NavigationBar } from "./components/navigation-bar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./components/pages/home";
 import Settings from "./components/pages/settings";
+import { Separator } from "./components/ui/separator";
 
 function App() {
   return (
