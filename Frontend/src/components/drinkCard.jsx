@@ -13,14 +13,16 @@ import {
 export function DrinkCard({ titleText, descriptionText, imgSrc, imgAlt }) {
   return (
     <Card
-      className="w-100 border-primary"
+      className="w-100"
       onClick={() => {
         console.log("clicked drink");
       }}
     >
       <CardHeader>
         <CardTitle>{titleText}</CardTitle>
-        <CardDescription>{descriptionText}</CardDescription>
+        {descriptionText && (
+          <CardDescription>{descriptionText}</CardDescription>
+        )}
       </CardHeader>
       <CardContent>
         <img src={imgSrc} alt={imgAlt} />

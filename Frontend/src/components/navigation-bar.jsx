@@ -1,38 +1,23 @@
 import React from "react";
-
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import { Separator } from "@/components/ui/separator";
+import { SearchBar } from "./searchBar";
+import { HomeIcon, GearIcon } from "@radix-ui/react-icons";
+import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export function NavigationBar() {
+  const locaton = useLocation();
+
   return (
     <>
-      <NavigationMenu className="m-5">
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              className={navigationMenuTriggerStyle()}
-              asChild
-            >
-              <a href="/#/">Home</a>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              className={navigationMenuTriggerStyle()}
-              asChild
-            >
-              <a href="/#/settings">Settings</a>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-      <Separator className="w-9/10 bg-primary" />
+      <header className="w-full bg-card px-[20px] p-5 flex h-[80px] justify-between items-center">
+        <Link to="/">
+          <HomeIcon className="w-[30px] h-[30px]" />
+        </Link>
+        {locaton.pathname === "/" && <SearchBar />}
+        <Link to="/settings">
+          <GearIcon className="w-[30px] h-[30px]" />
+        </Link>
+      </header>
     </>
   );
 }

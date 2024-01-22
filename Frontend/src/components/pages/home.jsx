@@ -1,24 +1,23 @@
 //import react
 import * as React from "react";
-//drinks.json
+//import requre module
 
 import { DrinkCard } from "../drinkCard";
+const drinks = require("../../../../drinks.json");
 
-function getDrinks() {
-  const drinks = require("../../drinks.json");
-  return drinks;
+function getDrinks(numReturn) {
+  return drinks.slice(0, numReturn);
 }
 
 function RenderDrinks() {
-  const drinks = getDrinks();
+  const drinks = getDrinks(10);
   return drinks.map((drink) => {
     return (
       <DrinkCard
-        key={drink.id}
-        titleText={drink.name}
-        descriptionText={drink.description}
-        imgSrc={drink.image}
-        imgAlt={drink.name}
+        key={drink.idDrink}
+        titleText={drink.strDrink}
+        imgSrc={drink.strDrinkThumb}
+        imgAlt={""}
       />
     );
   });
