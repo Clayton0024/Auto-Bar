@@ -3,6 +3,7 @@ import { SearchBar } from "./searchBar";
 import { HomeIcon, GearIcon } from "@radix-ui/react-icons";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useSearch } from "../searchContext";
 
 export function NavigationBar() {
   const locaton = useLocation();

@@ -25,7 +25,7 @@ export function DrinkCard({ titleText, descriptionText, imgSrc, imgAlt }) {
         )}
       </CardHeader>
       <CardContent>
-        <img src={imgSrc} alt={imgAlt} />
+        <img src={imgSrc} alt={imgAlt} className="rounded-md" />
       </CardContent>
       <CardFooter className="flex justify-end"></CardFooter>
     </Card>
