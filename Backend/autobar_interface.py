@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Dict, List
 from hardware_interface import HardwareInterface
-from communication_interface import TcpCommunicator
+import json
+import os
 
 
 class Ingredient(dict):
@@ -112,10 +113,32 @@ class IncomingMessage:
 
 
 class Autobar(AutobarInterface):
-    def __init__(self, hardware: HardwareInterface=None):
-        self._available_ingredients = []  # TODO: Load from file if available
-        communicator = TcpCommunicator("127.0.0.1", 6969, self._on_message_received)
-        communicator.start()
+    def __init__(self, ingredients_filepath='ingredients.json', hardware: HardwareInterface=None):
+        self._available_ingredients: Dict[int, Ingredient] = {}
+
+        self._ingredients_filepath = ingredients_filepath
+        
+        # load ingredients from file
+        if os.path.exists(self._ingredients_filepath):
+            self._load_ingredients_from_file()
+
+    def _save_ingredients_to_file(self):
+        with open(self._ingredients_filepath, 'w') as f:
+            json.dump(self._available_ingredients, f)
+
+    def _load_ingredients_from_file(self):
+        with open(self._ingredients_filepath, 'r') as f:
+            json_dict = json.load(f)
+            for key, val in json_dict.items():
+                self._available_ingredients.update(
+                    {int(key): Ingredient(
+                        name=val['name'],
+                        quantity_ml=val['quantity_ml'],
+                        relay_no=val['relay_no'],
+                        abv_pct=val['abv_pct'],
+                        install_time_s=val['install_time_s']
+                    )})
+            
 
     def _set_available_drinks(self) -> None:
         # TODO: filter local database for drinks that can be made with available ingredients
@@ -134,15 +157,24 @@ class Autobar(AutobarInterface):
                 raise(MessageError('Ingredient must have an alcohol percentage'))
             if 'install_time_s' not in ingredient:
                 raise(MessageError('Ingredient must have an install time'))
+            
+            relay_no = int(ingredient['relay_no'])
+            if relay_no < 1 or relay_no > 16:
+                raise(MessageError('Relay number must be between 1 and 16'))
+            
+            abv_pct = float(ingredient['abv_pct'])
+            if abv_pct < 0 or abv_pct > 100:
+                raise(MessageError('Alcohol percentage must be between 0 and 100'))
+
             ingredient_list.append(Ingredient(
                 name=ingredient['name'],
                 quantity_ml=ingredient['quantity_ml'],
-                relay_no=ingredient['relay_no'],
-                abv_pct=ingredient['abv_pct'],
+                relay_no=relay_no,
+                abv_pct=abv_pct,
                 install_time_s=ingredient['install_time_s']
             ))
 
-        self.set_ingredients(ingredient_list)
+        self._set_ingredients(ingredient_list)
 
     def _handle_place_order_message(self, message: dict):
         if 'drink_id' not in message:
@@ -173,10 +205,8 @@ class Autobar(AutobarInterface):
             'status': self.get_status()
         })
 
-    def _on_message_received(self, message: dict):
+    def on_message_received(self, message: dict):
         msg = IncomingMessage(message)
-        print("Received message: ")
-        print(msg.content)
         if msg.type == 'set_ingredients':
             self._handle_set_ingredients_message(msg.content)
         elif msg.type == 'place_order':
@@ -185,14 +215,20 @@ class Autobar(AutobarInterface):
     def get_available_drinks(self) -> List[Drink]:
         return self._available_drinks
 
-    def get_available_ingredients(self) -> List[Ingredient]:
+    def get_available_ingredients(self) -> Dict[int, Ingredient]:
         return self._available_ingredients
-
+    
     def set_ingredients(self, ingredients: List[Ingredient]):
-        pass
+        self._set_ingredients(ingredients)
+
+    def _set_ingredients(self, ingredients: List[Ingredient]):
+        for ingredient in ingredients:
+            self._available_ingredients.update({ingredient['relay_no']: ingredient})
+
+        self._save_ingredients_to_file()
+        
 
     def place_order(self, order: Order) -> bool:
-        
         pass
 
     def get_status(self) -> str:
