@@ -10,7 +10,7 @@ export function NavigationBar() {
 
   return (
     <>
-      <header className="w-full bg-card px-[20px] p-5 flex h-[80px] justify-between items-center">
+      <header className="w-full bg-card px-[20px] p-5 flex h-[80px] justify-between items-center sticky top-0">
         <Link to="/">
           <HomeIcon className="w-[30px] h-[30px]" />
         </Link>

@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter>
         <SearchProvider>
           <NavigationBar />
-          <Separator className="w-9/10 bg-primary" />
+          <Separator className="w-9/10 bg-primary sticky top-[80px]" />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/settings" element={<Settings />} />
