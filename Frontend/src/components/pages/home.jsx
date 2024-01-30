@@ -37,6 +37,7 @@ function RenderDrinks({ searchQuery }) {
   return drinksToShow.map((drink) => (
     <DrinkCard
       key={drink.idDrink}
+      id={drink.idDrink}
       titleText={drink.strDrink}
       imgSrc={drink.strDrinkThumb}
       imgAlt={drink.strDrink}
