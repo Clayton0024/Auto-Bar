@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import logging
 from typing import Dict, List
 from hardware_interface import HardwareInterface
 import json
@@ -121,10 +122,13 @@ class Autobar(AutobarInterface):
         # load ingredients from file
         if os.path.exists(self._ingredients_filepath):
             self._load_ingredients_from_file()
+        logging.info(f"Loaded ingredients from {self._ingredients_filepath}")
+        logging.info(f"Available ingredients: {self._available_ingredients}")
 
     def _save_ingredients_to_file(self):
         with open(self._ingredients_filepath, 'w') as f:
             json.dump(self._available_ingredients, f)
+            logging.info(f"Saved ingredients to {self._ingredients_filepath}")
 
     def _load_ingredients_from_file(self):
         with open(self._ingredients_filepath, 'r') as f:
@@ -138,7 +142,6 @@ class Autobar(AutobarInterface):
                         abv_pct=val['abv_pct'],
                         install_time_s=val['install_time_s']
                     )})
-            
 
     def _set_available_drinks(self) -> None:
         # TODO: filter local database for drinks that can be made with available ingredients
@@ -206,6 +209,7 @@ class Autobar(AutobarInterface):
         })
 
     def on_message_received(self, message: dict):
+        logging.info(f"Received message: {message}")
         msg = IncomingMessage(message)
         if msg.type == 'set_ingredients':
             self._handle_set_ingredients_message(msg.content)
@@ -227,8 +231,8 @@ class Autobar(AutobarInterface):
 
         self._save_ingredients_to_file()
         
-
     def place_order(self, order: Order) -> bool:
+        logging.info(f"Placing order: {order}")
         pass
 
     def get_status(self) -> str:
