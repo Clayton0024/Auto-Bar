@@ -88,7 +88,7 @@ class TestAutobar(unittest.TestCase):
             self.assertEqual(available_ingredients[3]['name'], 'Whiskey')
 
 
-    def test_on_message_received_relay_no_oob(self):
+    def test_on_message_received_relay_num_out_of_bounds(self):
         with tempfile.TemporaryDirectory() as f:
             ingredients_path = f + '/ingredients.json'
             autobar = Autobar(hardware=None, ingredients_filepath=ingredients_path)
@@ -125,43 +125,36 @@ class TestAutobar(unittest.TestCase):
                 ]
             }
 
-            # Simulate receiving a message
             with self.assertRaises(Exception):
                 autobar.on_message_received(test_message)
 
     def test_load_existing_ingredients(self):
-        with tempfile.TemporaryDirectory() as f:
-            ingredients_path = f + '/ingredients.json'
+            ingredients_path = './utilities/ingredients_mojito_margarita.json'
             autobar = Autobar(hardware=None, ingredients_filepath=ingredients_path)
-            # we need to ensure we can read our own file, so we need to write it first
-            test_message = {
-                'type': 'set_ingredients',
-                'ingredients': [
-                    {
-                        'name': 'Vodka',
-                        'quantity_ml': 500,
-                        'abv_pct': 40.0,
-                        'relay_no': 1,
-                        'install_time_s': 1234567890
-                    }
-                ]
-            }
-
-            # Simulate receiving a message
-            autobar.on_message_received(test_message)
-
-            # Create an instance of Autobar with the same temp file
-            autobar_2 = Autobar(hardware=None, ingredients_filepath=ingredients_path)
 
             # Check if the ingredients are correctly loaded
-            available_ingredients = autobar_2.get_available_ingredients()
+            available_ingredients = autobar.get_available_ingredients()
             print(available_ingredients)
+            self.assertIsInstance(available_ingredients[0], Ingredient)
+            self.assertEqual(available_ingredients[0]['name'], 'Tequila')
+            self.assertEqual(available_ingredients[0]['quantity_ml'], 500)
+            self.assertEqual(available_ingredients[0]['abv_pct'], 40.0)
+            self.assertEqual(available_ingredients[0]['relay_no'], 1)
+            self.assertEqual(available_ingredients[0]['install_time_s'], 1234567890)
+
             self.assertIsInstance(available_ingredients[1], Ingredient)
-            self.assertEqual(available_ingredients[1]['name'], 'Vodka')
+            self.assertEqual(available_ingredients[1]['name'], 'Triple sec')
             self.assertEqual(available_ingredients[1]['quantity_ml'], 500)
-            self.assertEqual(available_ingredients[1]['abv_pct'], 40.0)
-            self.assertEqual(available_ingredients[1]['relay_no'], 1)
+            self.assertEqual(available_ingredients[1]['abv_pct'], 20.0)
+            self.assertEqual(available_ingredients[1]['relay_no'], 2)
             self.assertEqual(available_ingredients[1]['install_time_s'], 1234567890)
+
+            self.assertIsInstance(available_ingredients[8], Ingredient)
+            self.assertEqual(available_ingredients[8]['name'], 'Soda Water')
+            self.assertEqual(available_ingredients[8]['quantity_ml'], 500)
+            self.assertEqual(available_ingredients[8]['abv_pct'], 0.0)
+            self.assertEqual(available_ingredients[8]['relay_no'], 9)
+            self.assertEqual(available_ingredients[8]['install_time_s'], 1234567890)
 
 if __name__ == '__main__':
     unittest.main()

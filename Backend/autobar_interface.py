@@ -116,6 +116,8 @@ class IncomingMessage:
 class Autobar(AutobarInterface):
     def __init__(self, ingredients_filepath='ingredients.json', hardware: HardwareInterface=None):
         self._available_ingredients: Dict[int, Ingredient] = {}
+        self._drink_database_filepath = '../drinks.json'
+        self._drink_list = self._load_drinks()
 
         self._ingredients_filepath = ingredients_filepath
         
@@ -132,18 +134,19 @@ class Autobar(AutobarInterface):
 
     def _load_ingredients_from_file(self):
         with open(self._ingredients_filepath, 'r') as f:
-            json_dict = json.load(f)
-            for key, val in json_dict.items():
+            json_ingredients = json.load(f)
+            for idx, ingredient in enumerate(json_ingredients):
                 self._available_ingredients.update(
-                    {int(key): Ingredient(
-                        name=val['name'],
-                        quantity_ml=val['quantity_ml'],
-                        relay_no=val['relay_no'],
-                        abv_pct=val['abv_pct'],
-                        install_time_s=val['install_time_s']
+                    {int(idx): Ingredient(
+                        name=ingredient['name'],
+                        quantity_ml=ingredient['quantity_ml'],
+                        relay_no=ingredient['relay_no'],
+                        abv_pct=ingredient['abv_pct'],
+                        install_time_s=ingredient['install_time_s']
                     )})
 
-    def _set_available_drinks(self) -> None:
+    def update_available_drinks(self) -> None:
+        available_drinks = self._get_available_drink_ids()
         # TODO: filter local database for drinks that can be made with available ingredients
         pass
 
