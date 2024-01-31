@@ -6,10 +6,20 @@ import {
 } from "@/components/ui/mix-dialog";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
+function sendOrder(id, mixtureBias, fillLevel) {
+  //TODO send order to server
+  console.log(id, mixtureBias[0], fillLevel[0]);
+}
 
 export function DrinkDialog({ title, id, onClose }) {
   const drinks = require("../../../drinks.json");
   const cupImage = require("@/assets/red_solo_cup.png");
+
+  const [mixtureBias, setMixtureBias] = useState([50]);
+  const [fillLevel, setFillLevel] = useState([100]);
+
   return (
     <Dialog defaultOpen={true} onOpenChange={() => onClose()}>
       <DialogContent className="grid grid-cols-1 gap-5 w-[700px]">
@@ -23,6 +33,7 @@ export function DrinkDialog({ title, id, onClose }) {
               max={100}
               step={1}
               orientation="vertical"
+              onValueChange={(value) => setFillLevel(value)}
             />
             <h1 className="mt-5">Fill Level</h1>
           </div>
@@ -40,11 +51,17 @@ export function DrinkDialog({ title, id, onClose }) {
             max={100}
             step={1}
             className="w-[500px] mx-5"
+            onValueChange={(value) => setMixtureBias(value)}
           />
           <h6>Uber Me Home!</h6>
         </div>
         <div className="flex justify-center">
-          <Button className="w-[220px] h-[60px]">Mix It!</Button>
+          <Button
+            className="w-[220px] h-[60px]"
+            onClick={() => sendOrder(id, mixtureBias, fillLevel)}
+          >
+            Mix It!
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
