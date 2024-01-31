@@ -1,10 +1,5 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/mix-dialog";
-import { Slider } from "@/components/ui/slider";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./mix-dialog";
+import { Slider } from "./slider";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
