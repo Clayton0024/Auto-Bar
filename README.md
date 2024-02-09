@@ -1,5 +1,4 @@
-# Auto-Bar
-Automatic Bartender
+
 # AutoBar: Automatic Bartender Machine
 
   
