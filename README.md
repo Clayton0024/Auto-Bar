@@ -4,8 +4,7 @@ Automatic Bartender
 
   
 
-Welcome to AutoBar, your cutting-edge Automatic Bartender Machine. Driven by a Raspberry Pi paired to a Raspad touchscreen, this innovative device incorporates peristaltic pumps to precisely handle fluids, while a 16-relay Modbus RTU control board seamlessly controls the mixing operations. For its user interface, AutoBar employs Eel—a lightweight, Electron-esque application—melding the dynamism of HTML, CSS (Bootstrap 5), and JavaScript on the front end with the robustness of Python on the backend.
-
+Welcome to AutoBar, the forefront of automated bartending technology. At its core, AutoBar utilizes a Raspberry Pi connected to a Raspad touchscreen, orchestrating a system of peristaltic pumps for accurate fluid management. The control over mixing operations is executed through a 16-relay Modbus RTU control board, ensuring precise and efficient drink preparation. For the user interface, AutoBar employs React aong with Shadcn to create an immersive and dynamic UI experience. This front-end framework is harmoniously integrated with a Python-powered backend, providing a solid foundation for mixing operations. This architecture not only enhances the user experience but also ensures that AutoBar operates with efficiency and reliability in automated drink mixing.
   
 
 ## Hardware Requirements
@@ -31,10 +30,11 @@ Welcome to AutoBar, your cutting-edge Automatic Bartender Machine. Driven by a R
 
 - Python 3.10
 
-- Eel (GUI)
+- React 18.2.0
 
-- Pymodbus (Communications)
+- Node v18.17.1
 
+- Npm 10.2.5
   
 
 ## Installation
