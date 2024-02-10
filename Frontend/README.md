@@ -20,6 +20,8 @@ cd Frontend
 
 npm  install
 
+node install-shadcn-deps.js
+
 # Basic Commands
 
 npm run dev (start dev server)
