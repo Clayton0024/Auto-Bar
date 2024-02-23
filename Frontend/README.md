@@ -14,7 +14,3 @@ npm run build (build for production)
 npm run lint (linting)
 
 npm run preview (Vite Preview)
-
-```
-
-```
