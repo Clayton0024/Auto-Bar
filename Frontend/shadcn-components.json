@@ -1,0 +1,13 @@
+
+{
+    "components": [
+      "button",
+      "card",
+      "input",
+      "label",
+      "select",
+      "separator",
+      "badge"
+    ]
+  }
+  
