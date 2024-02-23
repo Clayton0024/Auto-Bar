@@ -1,18 +1,9 @@
 # Vite Application Setup
 
-## Setup Environment
+## Dependencies
 
-```bash
-
-
-
-# Navigate to the project directory
-
-cd Frontend
-
-# Install dependencies
-
-npm  install
+React 18.2.0
+Vite 5.0.8
 
 # Basic Commands
 
@@ -20,5 +11,6 @@ npm run dev (start dev server)
 
 npm run build (build for production)
 
-npm run serve (serving the production build locally)
-```
+npm run lint (linting)
+
+npm run preview (Vite Preview)

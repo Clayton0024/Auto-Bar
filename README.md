@@ -1,16 +1,8 @@
-# Auto-Bar
-Automatic Bartender
 # AutoBar: Automatic Bartender Machine
 
-  
-
-Welcome to AutoBar, your cutting-edge Automatic Bartender Machine. Driven by a Raspberry Pi paired to a Raspad touchscreen, this innovative device incorporates peristaltic pumps to precisely handle fluids, while a 16-relay Modbus RTU control board seamlessly controls the mixing operations. For its user interface, AutoBar employs Eel—a lightweight, Electron-esque application—melding the dynamism of HTML, CSS (Bootstrap 5), and JavaScript on the front end with the robustness of Python on the backend.
-
-  
+Welcome to AutoBar, the forefront of automated bartending technology. At its core, AutoBar utilizes a Raspberry Pi connected to a Raspad touchscreen, orchestrating a system of peristaltic pumps for accurate fluid management. The control over mixing operations is executed through a 16-relay Modbus RTU control board, ensuring precise and efficient drink preparation. For the user interface, AutoBar employs React aong with Shadcn to create an immersive and dynamic UI experience. This front-end framework is harmoniously integrated with a Python-powered backend, providing a solid foundation for mixing operations. This architecture not only enhances the user experience but also ensures that AutoBar operates with efficiency and reliability in automated drink mixing.
 
 ## Hardware Requirements
-
-  
 
 - Raspberry Pi (Version 3 or higher recommended)
 
@@ -22,73 +14,38 @@ Welcome to AutoBar, your cutting-edge Automatic Bartender Machine. Driven by a R
 
 - USB to RS485 adapter
 
-  
-
 ## Software Requirements
 
- 
 - Raspbian OS (or any compatible OS)
 
 - Python 3.10
 
-- Eel (GUI)
+- React 18.2.0
 
-- Pymodbus (Communications)
+- Node v18.17.1
 
-  
+- Npm 10.2.5
 
 ## Installation
 
-  
-
 1. Setup your Raspberry Pi with the Raspad. Instructions for this can be found on the [Raspad documentation site](https://www.raspad.com/).
 
-  
-
-2. Install the required Python dependencies. It is recommended to use a virtual environment (may need to set an alias for your specific python version).
-
-```  
-
-python3 -m venv venv
-
-``` 
-
-3. Activate the venv
-
-```  
-
-source venv/bin/activate
-
-```  
-
-4. Install requirements
+2. Install Python and Node.
 
 ```
-
-pip install -r requirements.txt
-
+./setup.sh
 ```
-
-  
 
 ## Usage
 
-  
-
 Run the application with the following command:
 
-```  
-
+```
 python3 main.py
-
-```  
+```
 
 The UI will appear on the Raspad's screen. Use the search bar to look for your desired cocktail, select it, and AutoBar will take care of the rest!
 
-  
-
 ## Contributing
-
-  
 
 We welcome contributions to AutoBar!
