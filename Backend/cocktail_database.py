@@ -3,6 +3,8 @@ import string
 import json
 import os
 
+from config import LOCAL_DRINK_DATABASE_FILEPATH
+
 class CocktailDBAPI:
     def __init__(self, api_key: int):
         self.base_url = f"https://www.thecocktaildb.com/api/json/v2/{api_key}"
@@ -48,13 +50,13 @@ def update_local_db():
             for drink in data['drinks']:
                 drinks.append(drink)
 
-    json.dump(drinks, open("../drinks.json", "w"))
+    json.dump(drinks, open(LOCAL_DRINK_DATABASE_FILEPATH, "w"))
 
 def get_all_possible_ingredients():
-    if not os.path.exists("../drinks.json"):
+    if not os.path.exists(LOCAL_DRINK_DATABASE_FILEPATH):
         update_local_db()
 
-    drinks = json.load(open("../drinks.json", "r"))
+    drinks = json.load(open(LOCAL_DRINK_DATABASE_FILEPATH, "r"))
 
     ingredients = set()
 
