@@ -146,6 +146,9 @@ class Autobar(AutobarInterface):
                     )})
 
     def update_available_drinks(self) -> None:
+        """
+        Update the list of available drinks based on the available ingredients owned by this Autobar instance.
+        """
         available_drinks = self._get_available_drink_ids()
         # TODO: filter local database for drinks that can be made with available ingredients
         pass
@@ -220,12 +223,29 @@ class Autobar(AutobarInterface):
             self._handle_place_order_message(msg.content)
 
     def get_available_drinks(self) -> List[Drink]:
+        """
+        Get a list of available drinks.
+        Returns:
+            List[Drink]: A list of available drinks.
+        """
         return self._available_drinks
 
     def get_available_ingredients(self) -> Dict[int, Ingredient]:
+        """
+        Get a list of available ingredients.
+        Returns:
+            Dict[int, Ingredient]: A dictionary of available ingredients, indexed by relay number.
+        """
         return self._available_ingredients
     
     def set_ingredients(self, ingredients: List[Ingredient]):
+        """
+        Set the available ingredients with their quantities and location.
+        ingredients must be a dictionary with keys:
+            name: str
+            quantity_ml: int
+            relay_no: int
+        """
         self._set_ingredients(ingredients)
 
     def _set_ingredients(self, ingredients: List[Ingredient]):
@@ -235,6 +255,11 @@ class Autobar(AutobarInterface):
         self._save_ingredients_to_file()
         
     def place_order(self, order: Order) -> bool:
+        """
+        Make a drink by name if ingredients are available.
+        Returns:
+            bool: True if the drink was successfully made, False otherwise.
+        """
         logging.info(f"Placing order: {order}")
         pass
 
