@@ -7,15 +7,24 @@ class Ingredient(dict):
         abv_pct: float
     """
 
-    def __init__(
-        self, name: str, abv_pct: float
-    ):
-        super().__init__(
-            name=name,
-            abv_pct=abv_pct,
-        )
+    def __init__(self, name: str, abv_pct: float):
+        super().__init__(name=name, abv_pct=abv_pct)
 
-class AutobarIngredient(Ingredient):
+
+class MeasuredIngredient(Ingredient):
+    """
+    A MeasuredIngredient is a dictionary with properties:
+        name: str
+        quantity_ml: int
+        abv_pct: float
+    """
+
+    def __init__(self, name: str, quantity_ml: int, abv_pct: float):
+        super().__init__(name=name, abv_pct=abv_pct)
+        self['quantity_ml'] = quantity_ml
+
+
+class AutobarIngredient(MeasuredIngredient):
     """
     An AutobarIngredient is a dictionary with properties:
         name: str
@@ -25,17 +34,10 @@ class AutobarIngredient(Ingredient):
         install_time_s: int   (unix timestamp)
     """
 
-    def __init__(
-        self, name: str, quantity_ml: int, abv_pct: float, relay_no: int, install_time_s: int
-    ):
-        super().__init__(
-            name=name,
-            quantity_ml=quantity_ml,
-            abv_pct=abv_pct,
-            relay_no=relay_no,
-            install_time_s=install_time_s,
-        )
-
+    def __init__(self, name: str, quantity_ml: int, abv_pct: float, relay_no: int, install_time_s: int):
+        super().__init__(name=name, quantity_ml=quantity_ml, abv_pct=abv_pct)
+        self['relay_no'] = relay_no
+        self['install_time_s'] = install_time_s
 
 class Drink(dict):
     """
