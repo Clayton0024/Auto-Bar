@@ -173,7 +173,7 @@ def get_all_possible_drinks() -> set[Drink]:
     return drink_set
 
 
-def get_all_autobar_measurements():
+def get_all_measurements():
     drinks = get_all_possible_drinks()
     measures = set()
     for drink in drinks:
@@ -186,6 +186,6 @@ def get_all_autobar_measurements():
 if __name__ == "__main__":
     # drinks = get_all_possible_drinks()
     ingredients = get_all_possible_ingredients()
-    measures = get_all_autobar_measurements()
+    measures = get_all_measurements()
     for measure in measures:
         print(measure)
