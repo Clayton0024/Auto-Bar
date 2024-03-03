@@ -16,29 +16,29 @@ class MeasuredIngredient(Ingredient):
     """
     A MeasuredIngredient is a dictionary with properties:
         name: str
-        quantity_ml: int
+        quantity: str (hopefully a number followed by ml)
         abv_pct: float
     """
 
-    def __init__(self, name: str, quantity_ml: int, abv_pct: float):
+    def __init__(self, name: str, quantity: str, abv_pct: float):
         super().__init__(name=name, abv_pct=abv_pct)
-        self["quantity_ml"] = quantity_ml
+        self["quantity"] = quantity
 
 
 class AutobarIngredient(MeasuredIngredient):
     """
     An AutobarIngredient is a dictionary with properties:
         name: str
-        quantity_ml: int
+        quantity: str (hopefully a number followed by ml)
         abv_pct: float
         relay_no: int
         install_time_s: int   (unix timestamp)
     """
 
     def __init__(
-        self, name: str, quantity_ml: int, abv_pct: float, relay_no: int, install_time_s: int
+        self, name: str, quantity: str, abv_pct: float, relay_no: int, install_time_s: int
     ):
-        super().__init__(name=name, quantity_ml=quantity_ml, abv_pct=abv_pct)
+        super().__init__(name=name, quantity=quantity, abv_pct=abv_pct)
         self["relay_no"] = relay_no
         self["install_time_s"] = install_time_s
 

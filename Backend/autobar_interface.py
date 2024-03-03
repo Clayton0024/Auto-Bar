@@ -24,7 +24,7 @@ class AutobarInterface(ABC):
         Set the available ingredients with their quantities and location.
         ingredients must be a dictionary with keys:
             name: str
-            quantity_ml: int
+            quantity: int
             relay_no: int
         """
         pass
@@ -120,7 +120,7 @@ class Autobar(AutobarInterface):
                     {
                         int(idx): AutobarIngredient(
                             name=ingredient["name"],
-                            quantity_ml=ingredient["quantity_ml"],
+                            quantity=ingredient["quantity"],
                             relay_no=ingredient["relay_no"],
                             abv_pct=ingredient["abv_pct"],
                             install_time_s=ingredient["install_time_s"],
@@ -133,7 +133,7 @@ class Autobar(AutobarInterface):
         for ingredient in message["ingredients"]:
             if "name" not in ingredient:
                 raise (MessageError("Ingredient must have a name"))
-            if "quantity_ml" not in ingredient:
+            if "quantity" not in ingredient:
                 raise (MessageError("Ingredient must have a quantity in ml"))
             if "relay_no" not in ingredient:
                 raise (MessageError("Ingredient must have a relay number"))
@@ -153,7 +153,7 @@ class Autobar(AutobarInterface):
             ingredient_list.append(
                 AutobarIngredient(
                     name=ingredient["name"],
-                    quantity_ml=ingredient["quantity_ml"],
+                    quantity=ingredient["quantity"],
                     relay_no=relay_no,
                     abv_pct=abv_pct,
                     install_time_s=ingredient["install_time_s"],
@@ -211,7 +211,7 @@ class Autobar(AutobarInterface):
         Set the available ingredients with their quantities and location.
         ingredients must be a dictionary with keys:
             name: str
-            quantity_ml: int
+            quantity: int
             relay_no: int
         """
         self._set_ingredients(ingredients)

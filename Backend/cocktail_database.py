@@ -178,7 +178,7 @@ def get_all_measurements():
     measures = set()
     for drink in drinks:
         for ingredient in drink["ingredients"]:
-            measures.add(ingredient["quantity_ml"])
+            measures.add(ingredient["quantity"])
 
     return measures
 

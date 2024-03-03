@@ -1,3 +1,4 @@
+import os
 import unittest
 from autobar_interface import Autobar, AutobarIngredient
 import tempfile
@@ -14,7 +15,7 @@ class TestAutobar(unittest.TestCase):
                 "ingredients": [
                     {
                         "name": "Vodka",
-                        "quantity_ml": 500,
+                        "quantity": 500,
                         "abv_pct": 40.0,
                         "relay_no": 1,
                         "install_time_s": 1234567890,
@@ -29,7 +30,7 @@ class TestAutobar(unittest.TestCase):
             available_ingredients = autobar.get_available_ingredients()
             self.assertIsInstance(available_ingredients[1], AutobarIngredient)
             self.assertEqual(available_ingredients[1]["name"], "Vodka")
-            self.assertEqual(available_ingredients[1]["quantity_ml"], 500)
+            self.assertEqual(available_ingredients[1]["quantity"], 500)
             self.assertEqual(available_ingredients[1]["abv_pct"], 40.0)
             self.assertEqual(available_ingredients[1]["relay_no"], 1)
             self.assertEqual(available_ingredients[1]["install_time_s"], 1234567890)
@@ -40,7 +41,7 @@ class TestAutobar(unittest.TestCase):
                 "ingredients": [
                     {
                         "name": "Gin",
-                        "quantity_ml": 500,
+                        "quantity": 500,
                         "abv_pct": 40.0,
                         "relay_no": 1,
                         "install_time_s": 1234567890,
@@ -62,14 +63,14 @@ class TestAutobar(unittest.TestCase):
                 "ingredients": [
                     {
                         "name": "Rum",
-                        "quantity_ml": 500,
+                        "quantity": 500,
                         "abv_pct": 40.0,
                         "relay_no": 2,
                         "install_time_s": 1234567890,
                     },
                     {
                         "name": "Whiskey",
-                        "quantity_ml": 500,
+                        "quantity": 500,
                         "abv_pct": 40.0,
                         "relay_no": 3,
                         "install_time_s": 1234567890,
@@ -98,7 +99,7 @@ class TestAutobar(unittest.TestCase):
                 "ingredients": [
                     {
                         "name": "Vodka",
-                        "quantity_ml": 500,
+                        "quantity": 500,
                         "abv_pct": 40.0,
                         "relay_no": 0,
                         "install_time_s": 1234567890,
@@ -116,7 +117,7 @@ class TestAutobar(unittest.TestCase):
                 "ingredients": [
                     {
                         "name": "Vodka",
-                        "quantity_ml": 500,
+                        "quantity": 500,
                         "abv_pct": 40.0,
                         "relay_no": 17,
                         "install_time_s": 1234567890,
@@ -129,28 +130,29 @@ class TestAutobar(unittest.TestCase):
 
     def test_load_existing_ingredients(self):
         ingredients_path = "./utilities/ingredients_mojito_margarita.json"
+        # ensure this file exists
+        self.assertTrue(os.path.exists(ingredients_path))
         autobar = Autobar(ingredients_filepath=ingredients_path)
 
         # Check if the ingredients are correctly loaded
         available_ingredients = autobar.get_available_ingredients()
-        print(available_ingredients)
         self.assertIsInstance(available_ingredients[0], AutobarIngredient)
         self.assertEqual(available_ingredients[0]["name"], "Tequila")
-        self.assertEqual(available_ingredients[0]["quantity_ml"], 500)
+        self.assertEqual(available_ingredients[0]["quantity"], "500")
         self.assertEqual(available_ingredients[0]["abv_pct"], 40.0)
         self.assertEqual(available_ingredients[0]["relay_no"], 1)
         self.assertEqual(available_ingredients[0]["install_time_s"], 1234567890)
 
         self.assertIsInstance(available_ingredients[1], AutobarIngredient)
         self.assertEqual(available_ingredients[1]["name"], "Triple sec")
-        self.assertEqual(available_ingredients[1]["quantity_ml"], 500)
+        self.assertEqual(available_ingredients[1]["quantity"], "500")
         self.assertEqual(available_ingredients[1]["abv_pct"], 20.0)
         self.assertEqual(available_ingredients[1]["relay_no"], 2)
         self.assertEqual(available_ingredients[1]["install_time_s"], 1234567890)
 
         self.assertIsInstance(available_ingredients[8], AutobarIngredient)
         self.assertEqual(available_ingredients[8]["name"], "Soda Water")
-        self.assertEqual(available_ingredients[8]["quantity_ml"], 500)
+        self.assertEqual(available_ingredients[8]["quantity"], "500")
         self.assertEqual(available_ingredients[8]["abv_pct"], 0.0)
         self.assertEqual(available_ingredients[8]["relay_no"], 9)
         self.assertEqual(available_ingredients[8]["install_time_s"], 1234567890)

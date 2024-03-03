@@ -1,63 +1,63 @@
 [
     {
         "name": "Tequila",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 40,
         "relay_no": 1,
         "install_time_s": 1234567890
     },
     {
         "name": "Triple sec",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 20,
         "relay_no": 2,
         "install_time_s": 1234567890
     },
     {
         "name": "Lime juice",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 0,
         "relay_no": 3,
         "install_time_s": 1234567890
     },
     {
         "name": "Salt",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 0,
         "relay_no": 4,
         "install_time_s": 1234567890
     },
     {
         "name": "Light Rum",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 40,
         "relay_no": 5,
         "install_time_s": 1234567890
     },
     {
         "name": "Lime",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 0,
         "relay_no": 6,
         "install_time_s": 1234567890
     },
     {
         "name": "Sugar",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 0,
         "relay_no": 7,
         "install_time_s": 1234567890
     },
     {
         "name": "Mint",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 0,
         "relay_no": 8,
         "install_time_s": 1234567890
     },
     {
         "name": "Soda Water",
-        "quantity_ml": 500,
+        "quantity": "500",
         "abv_pct": 0,
         "relay_no": 9,
         "install_time_s": 1234567890
