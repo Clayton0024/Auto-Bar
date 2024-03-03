@@ -1,5 +1,5 @@
 import unittest
-from autobar_interface import Autobar, Ingredient
+from autobar_interface import Autobar, AutobarIngredient
 import tempfile
 
 class TestAutobar(unittest.TestCase):
@@ -26,7 +26,7 @@ class TestAutobar(unittest.TestCase):
 
             # Check if the ingredients are correctly updated
             available_ingredients = autobar.get_available_ingredients()
-            self.assertIsInstance(available_ingredients[1], Ingredient)
+            self.assertIsInstance(available_ingredients[1], AutobarIngredient)
             self.assertEqual(available_ingredients[1]['name'], 'Vodka')
             self.assertEqual(available_ingredients[1]['quantity_ml'], 500)
             self.assertEqual(available_ingredients[1]['abv_pct'], 40.0)
@@ -53,7 +53,7 @@ class TestAutobar(unittest.TestCase):
 
             # Check if the ingredients are correctly updated
             available_ingredients = autobar.get_available_ingredients()
-            self.assertIsInstance(available_ingredients[1], Ingredient)
+            self.assertIsInstance(available_ingredients[1], AutobarIngredient)
             self.assertEqual(available_ingredients[1]['name'], 'Gin')
 
             # now let's try adding two ingredients to relay no 2 and 3
@@ -82,9 +82,9 @@ class TestAutobar(unittest.TestCase):
 
             # Check if the ingredients are correctly updated
             available_ingredients = autobar.get_available_ingredients()
-            self.assertIsInstance(available_ingredients[2], Ingredient)
+            self.assertIsInstance(available_ingredients[2], AutobarIngredient)
             self.assertEqual(available_ingredients[2]['name'], 'Rum')
-            self.assertIsInstance(available_ingredients[3], Ingredient)
+            self.assertIsInstance(available_ingredients[3], AutobarIngredient)
             self.assertEqual(available_ingredients[3]['name'], 'Whiskey')
 
 
@@ -135,26 +135,39 @@ class TestAutobar(unittest.TestCase):
             # Check if the ingredients are correctly loaded
             available_ingredients = autobar.get_available_ingredients()
             print(available_ingredients)
-            self.assertIsInstance(available_ingredients[0], Ingredient)
+            self.assertIsInstance(available_ingredients[0], AutobarIngredient)
             self.assertEqual(available_ingredients[0]['name'], 'Tequila')
             self.assertEqual(available_ingredients[0]['quantity_ml'], 500)
             self.assertEqual(available_ingredients[0]['abv_pct'], 40.0)
             self.assertEqual(available_ingredients[0]['relay_no'], 1)
             self.assertEqual(available_ingredients[0]['install_time_s'], 1234567890)
 
-            self.assertIsInstance(available_ingredients[1], Ingredient)
+            self.assertIsInstance(available_ingredients[1], AutobarIngredient)
             self.assertEqual(available_ingredients[1]['name'], 'Triple sec')
             self.assertEqual(available_ingredients[1]['quantity_ml'], 500)
             self.assertEqual(available_ingredients[1]['abv_pct'], 20.0)
             self.assertEqual(available_ingredients[1]['relay_no'], 2)
             self.assertEqual(available_ingredients[1]['install_time_s'], 1234567890)
 
-            self.assertIsInstance(available_ingredients[8], Ingredient)
+            self.assertIsInstance(available_ingredients[8], AutobarIngredient)
             self.assertEqual(available_ingredients[8]['name'], 'Soda Water')
             self.assertEqual(available_ingredients[8]['quantity_ml'], 500)
             self.assertEqual(available_ingredients[8]['abv_pct'], 0.0)
             self.assertEqual(available_ingredients[8]['relay_no'], 9)
             self.assertEqual(available_ingredients[8]['install_time_s'], 1234567890)
+
+    def test_get_available_drinks(self):
+        ingredients_path = './utilities/ingredients_mojito_margarita.json'
+        autobar = Autobar(hardware=None, ingredients_filepath=ingredients_path)
+
+        # we'll assume drinks are correctly loaded due to other tests
+        available_drinks = autobar.get_available_drinks()
+
+        # assert that Mojito is in the list of available drinks
+        self.assertIn('Mojito', available_drinks)
+
+        # assert that Margarita is in the list of available drinks
+        self.assertIn('Margarita', available_drinks)
 
 if __name__ == '__main__':
     unittest.main()
