@@ -4,7 +4,7 @@ import json
 import os
 
 from config import LOCAL_DRINK_DATABASE_FILEPATH
-from objects import Drink, Ingredient
+from objects import Drink, Ingredient, MeasuredIngredient
 
 class CocktailDBAPI:
     def __init__(self, api_key: int):
@@ -63,16 +63,72 @@ def get_all_possible_ingredients() -> set[Ingredient]:
 
     drinks = json.load(open(LOCAL_DRINK_DATABASE_FILEPATH, "r"))
 
-    ingredients = []
+    ingredients = set()
 
     for drink in drinks:
         for i in range(1, 16):
             ingredient = drink[f"strIngredient{i}"]
-            if ingredient is not None and ingredient != "" and ingredient.lower() not in ingredients:
-                ingredients.append(Ingredient(ingredient.lower(), get_abv_pct(ingredient)))
+            if ingredient is not None and ingredient != "":
+                ingredients.add(ingredient.lower())
 
-    return ingredients
+    return [Ingredient(ingredient, get_abv_pct(ingredient)) for ingredient in ingredients]
 
+def get_all_possible_measures() -> set[Ingredient]:
+    if not os.path.exists(LOCAL_DRINK_DATABASE_FILEPATH):
+        update_local_db()
+
+    drinks = json.load(open(LOCAL_DRINK_DATABASE_FILEPATH, "r"))
+
+    measures = set()
+
+    for drink in drinks:
+        for i in range(1, 16):
+            measure = drink[f"strMeasure{i}"]
+            if measure is not None and measure != "":
+                measures.add(measure.lower())
+
+    return [measure for measure in measures]
+
+conversion_dict = {
+    'oz': 29.5735,
+    'cup': 240,
+    'tbsp': 14.7868,
+    'tsp': 4.92892,
+    'shot': 44.3603,
+    'shots': 44.3603,
+    'ml': 1,
+    'cl': 10,
+    'l': 1000,
+}
+def attempt_to_convert_to_ml(input_str) -> str:    
+    # Try to extract the numeric value and the unit.
+    try:
+        # Split the input string to extract the numeric value and the unit.
+        parts = input_str.split()
+        if not parts:
+            return input_str
+        # Handle fractional quantities.
+        if '/' in parts[0]:
+            num_parts = parts[0].split('/')
+            if len(num_parts) == 2:
+                quantity = float(num_parts[0]) / float(num_parts[1])
+            else:
+                return input_str
+        else:
+            quantity = float(parts[0])
+            
+        # Identify the unit and convert to lowercase for consistency.
+        unit = parts[1].lower()
+        
+        # Check if the unit is in the dictionary and perform the conversion.
+        if unit in conversion_dict:
+            return f"{int(quantity * conversion_dict[unit])} ml"
+        else:
+            return input_str
+    except (ValueError, IndexError, AttributeError):
+        # Return None if there's an error in conversion.
+        return input_str
+    
 def get_all_possible_drinks() -> set[Drink]:
     if not os.path.exists(LOCAL_DRINK_DATABASE_FILEPATH):
         update_local_db()
@@ -82,20 +138,44 @@ def get_all_possible_drinks() -> set[Drink]:
     drink_set = []
 
     for drink in drinks:
+        ingredients: list[MeasuredIngredient] = []
+        for i in range(1, 16):
+            ingredient = drink[f"strIngredient{i}"]
+            measure = drink[f"strMeasure{i}"]
+            if measure is not None and measure != "":
+                measure = attempt_to_convert_to_ml(measure)
+            else:
+                measure = "unknown"
+            
+            if ingredient is not None and ingredient != "":
+                ingredients.append(MeasuredIngredient(
+                    ingredient.lower(),
+                    measure,
+                    get_abv_pct(ingredient)
+                )
+            )
+
         drink_set.append(Drink(
             id=drink['idDrink'],
             name=drink['strDrink'],
-            ingredients=[
-                Ingredient(drink[f"strIngredient{i}"].lower(), get_abv_pct(drink[f"strIngredient{i}"]))
-                for i in range(1, 16)
-                if drink[f"strIngredient{i}"] is not None and drink[f"strIngredient{i}"] != ""
-            ],
+            ingredients=ingredients,
             description=drink['strInstructions']
         ))
 
     return drink_set
 
+def get_all_autobar_measurements():
+    drinks = get_all_possible_drinks()
+    measures = set()
+    for drink in drinks:
+        for ingredient in drink["ingredients"]:
+            measures.add(ingredient["quantity_ml"])
+
+    return measures
 
 if __name__ == "__main__":
-    drinks = get_all_possible_drinks()
+    # drinks = get_all_possible_drinks()
     ingredients = get_all_possible_ingredients()
+    measures = get_all_autobar_measurements()
+    for measure in measures:
+        print(measure)
