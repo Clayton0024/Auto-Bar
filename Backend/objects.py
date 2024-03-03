@@ -1,5 +1,6 @@
 from typing import List
 
+
 class Ingredient(dict):
     """
     An Ingredient is a dictionary with properties:
@@ -21,7 +22,7 @@ class MeasuredIngredient(Ingredient):
 
     def __init__(self, name: str, quantity_ml: int, abv_pct: float):
         super().__init__(name=name, abv_pct=abv_pct)
-        self['quantity_ml'] = quantity_ml
+        self["quantity_ml"] = quantity_ml
 
 
 class AutobarIngredient(MeasuredIngredient):
@@ -34,10 +35,13 @@ class AutobarIngredient(MeasuredIngredient):
         install_time_s: int   (unix timestamp)
     """
 
-    def __init__(self, name: str, quantity_ml: int, abv_pct: float, relay_no: int, install_time_s: int):
+    def __init__(
+        self, name: str, quantity_ml: int, abv_pct: float, relay_no: int, install_time_s: int
+    ):
         super().__init__(name=name, quantity_ml=quantity_ml, abv_pct=abv_pct)
-        self['relay_no'] = relay_no
-        self['install_time_s'] = install_time_s
+        self["relay_no"] = relay_no
+        self["install_time_s"] = install_time_s
+
 
 class Drink(dict):
     """
@@ -62,5 +66,3 @@ class Order(dict):
 
     def __init__(self, id: int, drink_id: int, multiplier: float):
         super().__init__(id=id, drink_id=drink_id, multiplier=multiplier)
-
-

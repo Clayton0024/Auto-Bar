@@ -12,10 +12,16 @@ from communication_interface import TcpCommunicator
 # logging.info("Informational message")
 # etc.
 now = datetime.datetime.now()
-subprocess.run(['mkdir', '-p', 'logs'])
+subprocess.run(["mkdir", "-p", "logs"])
 log_filename = "autobar_" + now.strftime("%Y%m%d_%H%M%S") + ".log"
 log_filepath = "logs/" + log_filename
-logging.basicConfig(filename=log_filepath, format='%(asctime)s: %(filename)s.%(lineno)d - %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(
+    filename=log_filepath,
+    format="%(asctime)s: %(filename)s.%(lineno)d - %(levelname)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    encoding="utf-8",
+    level=logging.DEBUG,
+)
 logging.info("Starting Autobar")
 
 autobar = Autobar()
