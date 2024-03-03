@@ -53,7 +53,7 @@ def update_local_db():
             for drink in data["drinks"]:
                 drinks.append(drink)
 
-    json.dump(drinks, open(LOCAL_DRINK_DATABASE_FILEPATH, "w"))
+    json.dump(drinks, open(LOCAL_DRINK_DATABASE_FILEPATH, "w"), indent=4, ensure_ascii=False)
 
 
 def get_abv_pct(ingredient: str) -> float:
