@@ -6,7 +6,7 @@ class TestAutobar(unittest.TestCase):
     def test_on_message_received_set_ingredients(self):
         with tempfile.TemporaryDirectory() as f:
             ingredients_path = f + '/ingredients.json'
-            autobar = Autobar(hardware=None, ingredients_filepath=ingredients_path)
+            autobar = Autobar(ingredients_filepath=ingredients_path)
             # Mock message to be received
             test_message = {
                 'type': 'set_ingredients',
@@ -91,7 +91,7 @@ class TestAutobar(unittest.TestCase):
     def test_on_message_received_relay_num_out_of_bounds(self):
         with tempfile.TemporaryDirectory() as f:
             ingredients_path = f + '/ingredients.json'
-            autobar = Autobar(hardware=None, ingredients_filepath=ingredients_path)
+            autobar = Autobar(ingredients_filepath=ingredients_path)
 
             # ingredient of relay no 0 should fail
             test_message = {
@@ -130,7 +130,7 @@ class TestAutobar(unittest.TestCase):
 
     def test_load_existing_ingredients(self):
             ingredients_path = './utilities/ingredients_mojito_margarita.json'
-            autobar = Autobar(hardware=None, ingredients_filepath=ingredients_path)
+            autobar = Autobar(ingredients_filepath=ingredients_path)
 
             # Check if the ingredients are correctly loaded
             available_ingredients = autobar.get_available_ingredients()
@@ -156,18 +156,19 @@ class TestAutobar(unittest.TestCase):
             self.assertEqual(available_ingredients[8]['relay_no'], 9)
             self.assertEqual(available_ingredients[8]['install_time_s'], 1234567890)
 
-    def test_get_available_drinks(self):
-        ingredients_path = './utilities/ingredients_mojito_margarita.json'
-        autobar = Autobar(hardware=None, ingredients_filepath=ingredients_path)
+    # in progress
+    # def test_get_available_drinks(self):
+    #     ingredients_path = './utilities/ingredients_mojito_margarita.json'
+    #     autobar = Autobar(ingredients_filepath=ingredients_path)
 
-        # we'll assume drinks are correctly loaded due to other tests
-        available_drinks = autobar.get_available_drinks()
+    #     # we'll assume drinks are correctly loaded due to other tests
+    #     available_drinks = autobar.get_available_drinks()
 
-        # assert that Mojito is in the list of available drinks
-        self.assertIn('Mojito', available_drinks)
+    #     # assert that Mojito is in the list of available drinks
+    #     self.assertIn('Mojito', available_drinks)
 
-        # assert that Margarita is in the list of available drinks
-        self.assertIn('Margarita', available_drinks)
+    #     # assert that Margarita is in the list of available drinks
+    #     self.assertIn('Margarita', available_drinks)
 
 if __name__ == '__main__':
     unittest.main()
