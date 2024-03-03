@@ -4,6 +4,7 @@ import json
 import os
 
 from config import LOCAL_DRINK_DATABASE_FILEPATH
+from objects import Drink, Ingredient
 
 class CocktailDBAPI:
     def __init__(self, api_key: int):
@@ -52,21 +53,49 @@ def update_local_db():
 
     json.dump(drinks, open(LOCAL_DRINK_DATABASE_FILEPATH, "w"))
 
-def get_all_possible_ingredients():
+def get_abv_pct(ingredient: str) -> float:
+    #todo: implement a way to get the abv percentage of an ingredient
+    return 0.0
+
+def get_all_possible_ingredients() -> set[Ingredient]:
     if not os.path.exists(LOCAL_DRINK_DATABASE_FILEPATH):
         update_local_db()
 
     drinks = json.load(open(LOCAL_DRINK_DATABASE_FILEPATH, "r"))
 
-    ingredients = set()
+    ingredients = []
 
     for drink in drinks:
         for i in range(1, 16):
             ingredient = drink[f"strIngredient{i}"]
-            if ingredient is not None and ingredient != "":
-                ingredients.add(ingredient.lower())
+            if ingredient is not None and ingredient != "" and ingredient.lower() not in ingredients:
+                ingredients.append(Ingredient(ingredient.lower(), get_abv_pct(ingredient)))
 
     return ingredients
 
+def get_all_possible_drinks() -> set[Drink]:
+    if not os.path.exists(LOCAL_DRINK_DATABASE_FILEPATH):
+        update_local_db()
+
+    drinks = json.load(open(LOCAL_DRINK_DATABASE_FILEPATH, "r"))
+
+    drink_set = []
+
+    for drink in drinks:
+        drink_set.append(Drink(
+            id=drink['idDrink'],
+            name=drink['strDrink'],
+            ingredients=[
+                Ingredient(drink[f"strIngredient{i}"].lower(), get_abv_pct(drink[f"strIngredient{i}"]))
+                for i in range(1, 16)
+                if drink[f"strIngredient{i}"] is not None and drink[f"strIngredient{i}"] != ""
+            ],
+            description=drink['strInstructions']
+        ))
+
+    return drink_set
+
+
 if __name__ == "__main__":
-    update_local_db()
+    drinks = get_all_possible_drinks()
+    ingredients = get_all_possible_ingredients()

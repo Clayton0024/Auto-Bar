@@ -1,56 +1,10 @@
 from abc import ABC, abstractmethod
 import logging
 from typing import Dict, List
-from hardware_interface import HardwareInterface
 import json
 import os
 
-
-class Ingredient(dict):
-    """
-    An ingredient is a dictionary with properties:
-        name: str
-        quantity_ml: int
-        abv_pct: float
-        relay_no: int
-        install_time_s: int   (unix timestamp)
-    """
-
-    def __init__(
-        self, name: str, quantity_ml: int, abv_pct: float, relay_no: int, install_time_s: int
-    ):
-        super().__init__(
-            name=name,
-            quantity_ml=quantity_ml,
-            abv_pct=abv_pct,
-            relay_no=relay_no,
-            install_time_s=install_time_s,
-        )
-
-
-class Drink(dict):
-    """
-    A drink is a dictionary consisting of:
-        id: int
-        name: str
-        ingredients: List[Ingredient]
-        description: str
-    """
-
-    def __init__(self, id: int, name: str, ingredients: List[Ingredient], description: str):
-        super().__init__(id=id, name=name, ingredients=ingredients, description=description)
-
-
-class Order(dict):
-    """
-    An order is a dictionary consisting of:
-        id: int
-        drink_id: int
-        multiplier: float
-    """
-
-    def __init__(self, id: int, drink_id: int, multiplier: float):
-        super().__init__(id=id, drink_id=drink_id, multiplier=multiplier)
+from objects import AutobarIngredient, Drink, Order
 
 
 class AutobarInterface(ABC):
@@ -60,12 +14,12 @@ class AutobarInterface(ABC):
         pass
 
     @abstractmethod
-    def get_available_ingredients(self) -> List[Ingredient]:
+    def get_available_ingredients(self) -> List[AutobarIngredient]:
         """Gets a list of available ingredients."""
         pass
 
     @abstractmethod
-    def set_ingredients(self, ingredients: List[Ingredient]):
+    def set_ingredients(self, ingredients: List[AutobarIngredient]):
         """
         Set the available ingredients with their quantities and location.
         ingredients must be a dictionary with keys:
@@ -114,10 +68,13 @@ class IncomingMessage:
 
 
 class Autobar(AutobarInterface):
-    def __init__(self, ingredients_filepath='ingredients.json', hardware: HardwareInterface=None):
-        self._available_ingredients: Dict[int, Ingredient] = {}
+    def __init__(self, ingredients_filepath='ingredients.json'):
         self._drink_database_filepath = '../drinks.json'
-        self._drink_list = self._load_drinks()
+
+        self._available_ingredients: Dict[int, AutobarIngredient] = {}
+        self._available_drinks = []  # Drinks that can be made with available ingredients
+        self._full_ingredients_list = []  # All ingredients in database
+        self._full_drink_list = self._load_drinks()  # All drinks in database
 
         self._ingredients_filepath = ingredients_filepath
         
@@ -126,6 +83,28 @@ class Autobar(AutobarInterface):
             self._load_ingredients_from_file()
         logging.info(f"Loaded ingredients from {self._ingredients_filepath}")
         logging.info(f"Available ingredients: {self._available_ingredients}")
+
+    def _load_drinks(self):
+        with open(self._drink_database_filepath, 'r') as f:
+            return json.load(f)
+        
+    def _can_make_drink(self, drink: Drink) -> bool:
+        """
+        Check if the ingredients for a drink are available.
+        Returns:
+            bool: True if the ingredients are available, False otherwise.
+        """
+        # todo: implement this
+        return False
+
+    def update_available_drinks(self) -> None:
+        """
+        Update the list of available drinks based on the available ingredients owned by this Autobar instance.
+        """
+        self._available_drinks = []
+        for drink in self._full_drink_list:
+            if self._can_make_drink(drink):
+                self._available_drinks.append(drink)
 
     def _save_ingredients_to_file(self):
         with open(self._ingredients_filepath, 'w') as f:
@@ -137,7 +116,7 @@ class Autobar(AutobarInterface):
             json_ingredients = json.load(f)
             for idx, ingredient in enumerate(json_ingredients):
                 self._available_ingredients.update(
-                    {int(idx): Ingredient(
+                    {int(idx): AutobarIngredient(
                         name=ingredient['name'],
                         quantity_ml=ingredient['quantity_ml'],
                         relay_no=ingredient['relay_no'],
@@ -145,16 +124,8 @@ class Autobar(AutobarInterface):
                         install_time_s=ingredient['install_time_s']
                     )})
 
-    def update_available_drinks(self) -> None:
-        """
-        Update the list of available drinks based on the available ingredients owned by this Autobar instance.
-        """
-        available_drinks = self._get_available_drink_ids()
-        # TODO: filter local database for drinks that can be made with available ingredients
-        pass
-
     def _handle_set_ingredients_message(self, message: dict):
-        ingredient_list: List[Ingredient] = []
+        ingredient_list: List[AutobarIngredient] = []
         for ingredient in message['ingredients']:
             if 'name' not in ingredient:
                 raise(MessageError('Ingredient must have a name'))
@@ -175,7 +146,7 @@ class Autobar(AutobarInterface):
             if abv_pct < 0 or abv_pct > 100:
                 raise(MessageError('Alcohol percentage must be between 0 and 100'))
 
-            ingredient_list.append(Ingredient(
+            ingredient_list.append(AutobarIngredient(
                 name=ingredient['name'],
                 quantity_ml=ingredient['quantity_ml'],
                 relay_no=relay_no,
@@ -230,7 +201,7 @@ class Autobar(AutobarInterface):
         """
         return self._available_drinks
 
-    def get_available_ingredients(self) -> Dict[int, Ingredient]:
+    def get_available_ingredients(self) -> Dict[int, AutobarIngredient]:
         """
         Get a list of available ingredients.
         Returns:
@@ -238,7 +209,7 @@ class Autobar(AutobarInterface):
         """
         return self._available_ingredients
     
-    def set_ingredients(self, ingredients: List[Ingredient]):
+    def set_ingredients(self, ingredients: List[AutobarIngredient]):
         """
         Set the available ingredients with their quantities and location.
         ingredients must be a dictionary with keys:
@@ -248,7 +219,7 @@ class Autobar(AutobarInterface):
         """
         self._set_ingredients(ingredients)
 
-    def _set_ingredients(self, ingredients: List[Ingredient]):
+    def _set_ingredients(self, ingredients: List[AutobarIngredient]):
         for ingredient in ingredients:
             self._available_ingredients.update({ingredient['relay_no']: ingredient})
 
